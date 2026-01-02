@@ -46,7 +46,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200 relative">
+            <div className="bg-white text-gray-900 rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200 relative">
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
@@ -77,7 +77,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
                                 <input
                                     type="text"
                                     required
-                                    className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                                    className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition text-gray-900"
                                     placeholder="Jane Doe"
                                     value={formData.name}
                                     onChange={e => setFormData({ ...formData, name: e.target.value })}
@@ -90,7 +90,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
                             <input
                                 type="email"
                                 required
-                                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition text-gray-900"
                                 placeholder="name@example.com"
                                 value={formData.email}
                                 onChange={e => setFormData({ ...formData, email: e.target.value })}
@@ -102,7 +102,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalP
                             <input
                                 type="password"
                                 required
-                                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
+                                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition text-gray-900"
                                 placeholder="••••••••"
                                 value={formData.password}
                                 onChange={e => setFormData({ ...formData, password: e.target.value })}
