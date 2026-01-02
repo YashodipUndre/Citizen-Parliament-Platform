@@ -70,15 +70,12 @@ export function ManagementTable({ questions, onMerge }: ManagementTableProps) {
                             </th>
                             <th className="p-5">Question Details</th>
                             <th className="p-5">Category</th>
-                            <th className="p-5">Priority</th>
                             <th className="p-5 text-center">Votes</th>
                             <th className="p-5">Status</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                         {questions.map((q) => {
-                            const barWidth = Math.min((q.votes / 10), 100);
-
                             return (
                                 <tr key={q.id} className={cn(
                                     "hover:bg-gray-50/80 transition-colors group",
@@ -110,27 +107,11 @@ export function ManagementTable({ questions, onMerge }: ManagementTableProps) {
                                             {q.category}
                                         </span>
                                     </td>
-                                    <td className="p-5 w-48">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-24 bg-gray-100 h-2.5 rounded-full overflow-hidden shadow-inner">
-                                                <div
-                                                    className={cn(
-                                                        "h-full transition-all duration-1000 ease-out rounded-full",
-                                                        barWidth > 80 ? "bg-gradient-to-r from-red-500 to-rose-500" :
-                                                            barWidth > 50 ? "bg-gradient-to-r from-amber-400 to-orange-500" :
-                                                                "bg-gradient-to-r from-teal-400 to-primary-500"
-                                                    )}
-                                                    style={{ width: `${barWidth}%` }}
-                                                ></div>
-                                            </div>
-                                            <span className="text-xs font-bold text-gray-700">{(q.votes / 10).toFixed(0)}</span>
-                                        </div>
-                                    </td>
                                     <td className="p-5 font-bold text-gray-700 text-center text-lg font-mono tracking-tight">{q.votes}</td>
                                     <td className="p-5">
                                         <span className={cn(
                                             "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ring-1 ring-inset",
-                                            statusBadges[q.status] || "".split(" ")[0] // Hacky default, assumes valid status
+                                            statusBadges[q.status] || "".split(" ")[0]
                                         )}>
                                             <div className={cn("w-1.5 h-1.5 rounded-full mr-2", statusBadges[q.status]?.replace('bg-', 'bg-current text-').split(" ")[1] || "bg-gray-500")}></div>
                                             {q.status}

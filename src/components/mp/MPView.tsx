@@ -18,11 +18,12 @@ export function MPView({ questions, onMerge }: MPViewProps) {
         if (questions.length === 0) return;
 
         // Generate CSV content
-        const headers = ['ID', 'Title', 'Category', 'Votes', 'Status', 'Author', 'Created At'];
+        const headers = ['ID', 'Title', 'Category', 'Description', 'Votes', 'Status', 'Author', 'Created At'];
         const rows = questions.map(q => [
             q.id,
             `"${q.title.replace(/"/g, '""')}"`,
             q.category,
+            `"${q.desc.replace(/"/g, '""').replace(/\n/g, ' ')}"`,
             q.votes,
             q.status,
             q.author,
@@ -84,7 +85,10 @@ export function MPView({ questions, onMerge }: MPViewProps) {
                 </div>
             </div>
 
-            <ManagementTable questions={questions} onMerge={onMerge} />
+            <ManagementTable
+                questions={questions}
+                onMerge={onMerge}
+            />
 
             <ReportModal
                 isOpen={isReportModalOpen}

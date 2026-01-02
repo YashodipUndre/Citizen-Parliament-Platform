@@ -28,7 +28,7 @@ export async function GET() {
         },
         {
             $project: {
-                commentsData: 0 // Remove the heavy full data if we only need count, but here we keep it for length
+                commentsData: 0
             }
         },
         { $sort: { createdAt: -1 } }
@@ -66,11 +66,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+    await connectDB();
     const body = await request.json();
     const { action, id, ids } = body;
 
     if (action === 'upvote') {
-        const q = await QS.findOne({ id: id });
+        const q = await QS.findOne({ id: parseInt(id.toString()) });
         if (q) {
             q.votes++;
             await q.save();
