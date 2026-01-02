@@ -1,7 +1,9 @@
 import { Question } from '@/types';
 import { ManagementTable } from './ManagementTable';
 import { useAuth } from '@/context/AuthContext';
-import { ShieldAlert, Download, FileText } from 'lucide-react';
+import { ShieldAlert, Download, FileText, X } from 'lucide-react';
+import { useState } from 'react';
+import { ReportModal } from './ReportModal';
 
 interface MPViewProps {
     questions: Question[];
@@ -10,6 +12,39 @@ interface MPViewProps {
 
 export function MPView({ questions, onMerge }: MPViewProps) {
     const { user } = useAuth();
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
+    const handleExportCsv = () => {
+        if (questions.length === 0) return;
+
+        // Generate CSV content
+        const headers = ['ID', 'Title', 'Category', 'Votes', 'Status', 'Author', 'Created At'];
+        const rows = questions.map(q => [
+            q.id,
+            `"${q.title.replace(/"/g, '""')}"`,
+            q.category,
+            q.votes,
+            q.status,
+            q.author,
+            q.createdAt ? new Date(q.createdAt).toLocaleDateString() : 'N/A'
+        ]);
+
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.join(','))
+        ].join('\n');
+
+        // Create download link
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `parliament_session_data_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     if (!user || user.role !== 'mp') {
         return (
@@ -34,16 +69,28 @@ export function MPView({ questions, onMerge }: MPViewProps) {
                 </div>
 
                 <div className="flex gap-3">
-                    <button className="bg-white text-gray-700 hover:text-gray-900 border border-gray-200 hover:bg-gray-50 px-5 py-2.5 rounded-xl font-bold transition flex items-center gap-2 shadow-sm">
+                    <button
+                        onClick={() => setIsReportModalOpen(true)}
+                        className="bg-white text-gray-700 hover:text-gray-900 border border-gray-200 hover:bg-gray-50 px-5 py-2.5 rounded-xl font-bold transition flex items-center gap-2 shadow-sm"
+                    >
                         <FileText className="w-4 h-4" /> Reports
                     </button>
-                    <button className="bg-gray-900 hover:bg-black text-white px-5 py-2.5 rounded-xl font-bold transition shadow-lg shadow-gray-200 flex items-center gap-2">
+                    <button
+                        onClick={handleExportCsv}
+                        className="bg-gray-900 hover:bg-black text-white px-5 py-2.5 rounded-xl font-bold transition shadow-lg shadow-gray-200 flex items-center gap-2"
+                    >
                         <Download className="w-4 h-4" /> Export Session Data
                     </button>
                 </div>
             </div>
 
             <ManagementTable questions={questions} onMerge={onMerge} />
+
+            <ReportModal
+                isOpen={isReportModalOpen}
+                onClose={() => setIsReportModalOpen(false)}
+                questions={questions}
+            />
         </section>
     );
 }

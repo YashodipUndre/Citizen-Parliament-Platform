@@ -49,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setUser(data.user);
             localStorage.setItem('user', JSON.stringify(data.user));
             // Token is handled by HttpOnly cookie, but we can also store it if we need to send it explicitly
+            router.push('/dashboard');
 
         } catch (error) {
             console.error(error);
@@ -86,8 +87,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null);
         localStorage.removeItem('user');
         // Clear cookie via API call usually, but we'll simplistic here
-        fetch('api/auth/logout',{
-            method:'post',
+        fetch('api/auth/logout', {
+            method: 'post',
             credentials: "include",
         })
         router.push('/');
