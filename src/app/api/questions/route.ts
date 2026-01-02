@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Question } from '@/types';
 import { connectDB } from '@/lib/db';
-import { QS, QuestionSchema } from '@/app/models/questions';
-import console from 'console';
+import { QS } from '@/app/models/questions';
+import { jwtVerify } from 'jose';
+
+const JWT_SECRET = process.env.JWT_SECRET || "default_dev_secret_do_not_use_in_prod";
+const secret = new TextEncoder().encode(JWT_SECRET);
 export async function GET() {
     await connectDB();
 
@@ -35,17 +38,31 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-    const body = await request.json();
-    const newQuestion: Question = {
-        id: Date.now(),
-        title: body.title,
-        category: body.category,
-        desc: body.desc,
-        votes: 1,
-        status: 'New'
-    };
-    await QS.create(newQuestion);
-    return NextResponse.json(newQuestion);
+    try {
+        await connectDB();
+        const token = request.cookies.get('token')?.value;
+        if (!token) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const { payload } = await jwtVerify(token, secret);
+        const userId = payload.id as string;
+
+        const body = await request.json();
+        const newQuestion: Question = {
+            id: Date.now(),
+            title: body.title,
+            category: body.category,
+            desc: body.desc,
+            votes: 1,
+            status: 'New',
+            author: userId
+        };
+        await QS.create(newQuestion);
+        return NextResponse.json(newQuestion);
+    } catch (error) {
+        return NextResponse.json({ error: "Unauthorized or invalid session" }, { status: 401 });
+    }
 }
 
 export async function PUT(request: NextRequest) {

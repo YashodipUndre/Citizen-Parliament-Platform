@@ -16,6 +16,7 @@ export const QuestionSchema = new Schema(
             default: 'New',
             enum: ['New', 'Under Review', 'Trending', 'Merged/Consolidated']
         },
+        author: { type: String, required: true }
     },
     { timestamps: true }
 );

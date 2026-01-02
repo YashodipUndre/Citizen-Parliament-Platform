@@ -9,9 +9,10 @@ interface CitizenViewProps {
     questions: Question[];
     onUpvote: (id: number) => void;
     onSubmit: (title: string, category: QuestionCategory, desc: string) => Promise<void>;
+    onDelete: (id: number) => void;
 }
 
-export function CitizenView({ questions, onUpvote, onSubmit }: CitizenViewProps) {
+export function CitizenView({ questions, onUpvote, onSubmit, onDelete }: CitizenViewProps) {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const { user } = useAuth();
 
@@ -64,7 +65,7 @@ export function CitizenView({ questions, onUpvote, onSubmit }: CitizenViewProps)
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {questions.map((q) => (
-                    <QuestionCard key={q.id} question={q} onUpvote={onUpvote} />
+                    <QuestionCard key={q.id} question={q} onUpvote={onUpvote} onDelete={onDelete} />
                 ))}
             </div>
         </section>

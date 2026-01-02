@@ -16,6 +16,7 @@ export interface Question {
     desc: string;
     votes: number;
     status: QuestionStatus;
+    author: string; // User ID
     comments?: Comment[];
     createdAt?: string;
 }

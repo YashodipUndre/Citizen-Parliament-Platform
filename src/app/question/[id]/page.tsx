@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { api } from '@/services/api';
 import { Question, Comment } from '@/types';
 import { useAuth } from '@/context/AuthContext';
-import { Loader2, ArrowLeft, Send, User as UserIcon, Calendar, MessageSquare, Clock, LogOut } from 'lucide-react';
+import { Loader2, ArrowLeft, Send, User as UserIcon, Calendar, MessageSquare, Clock, LogOut, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Header } from '@/components/layout/Header';
 
@@ -14,7 +14,7 @@ export default function QuestionDetail() {
     const router = useRouter();
     const { user } = useAuth();
     const id = params.id as string;
-    const{logout}=useAuth();
+    const { logout } = useAuth();
     const [question, setQuestion] = useState<Question | null>(null);
     const [loading, setLoading] = useState(true);
     const [commentText, setCommentText] = useState('');
@@ -43,9 +43,19 @@ export default function QuestionDetail() {
             setCommentText('');
             loadData(); // Refresh to see new comment
         } catch (e) {
-           logout();
+            logout();
         } finally {
             setSubmitting(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!confirm("Are you sure you want to delete this proposal? This action cannot be undone.")) return;
+        try {
+            await api.deleteQuestion(question?.id as number);
+            router.push('/');
+        } catch (e) {
+            console.error(e);
         }
     };
 
@@ -61,6 +71,17 @@ export default function QuestionDetail() {
                         <ArrowLeft className="w-5 h-5 text-gray-600" />
                     </button>
                     <h1 className="font-bold text-lg text-gray-800">Discussion Thread</h1>
+                    <div className="ml-auto flex items-center gap-2">
+                        {user && question && user.id === question.author && (
+                            <button
+                                onClick={handleDelete}
+                                className="flex items-center gap-2 px-4 py-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition font-bold text-sm"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                                Delete Proposal
+                            </button>
+                        )}
+                    </div>
                 </header>
 
                 <main className="p-6 md:p-10 space-y-8 max-w-4xl mx-auto">
@@ -94,7 +115,7 @@ export default function QuestionDetail() {
                                 <span>{question.votes} Votes</span>
                             </div>
                         </div>
-                   </div>
+                    </div>
 
                     {/* Comments Section */}
                     <div className="space-y-6">
@@ -155,11 +176,11 @@ export default function QuestionDetail() {
                                                     <button
                                                         onClick={async () => {
                                                             if (confirm("Delete this comment?")) {
-                                                                try{
-                                                                await api.deleteComment(comment._id);
-                                                                loadData();
-                                                                } catch(error){
-                                                                   logout();
+                                                                try {
+                                                                    await api.deleteComment(comment._id);
+                                                                    loadData();
+                                                                } catch (error) {
+                                                                    logout();
                                                                 }
                                                             }
                                                         }}

@@ -1,4 +1,4 @@
-import { ArrowBigUp, Share2, MessageSquare } from 'lucide-react';
+import { ArrowBigUp, Share2, MessageSquare, Trash2 } from 'lucide-react';
 import { Question } from '@/types';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
@@ -7,9 +7,10 @@ import Link from 'next/link';
 interface QuestionCardProps {
     question: Question;
     onUpvote: (id: number) => void;
+    onDelete: (id: number) => void;
 }
 
-export function QuestionCard({ question, onUpvote }: QuestionCardProps) {
+export function QuestionCard({ question, onUpvote, onDelete }: QuestionCardProps) {
     const { user } = useAuth();
 
     // Status colors mapping
@@ -73,6 +74,19 @@ export function QuestionCard({ question, onUpvote }: QuestionCardProps) {
                         <Link href={`/question/${question.id}`} className="text-gray-400 hover:text-primary-600 hover:bg-primary-50 p-2 rounded-full transition-colors">
                             <MessageSquare className="w-4 h-4" />
                         </Link>
+                        {user?.id === question.author && (
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (confirm("Are you sure you want to delete this question?")) {
+                                        onDelete(question.id);
+                                    }
+                                }}
+                                className="text-gray-400 hover:text-rose-600 hover:bg-rose-50 p-2 rounded-full transition-colors"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                        )}
                         <button className="text-gray-400 hover:text-primary-600 hover:bg-primary-50 p-2 rounded-full transition-colors">
                             <Share2 className="w-4 h-4" />
                         </button>

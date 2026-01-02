@@ -1,4 +1,4 @@
-import { Search, User, LogOut, ChevronDown } from 'lucide-react';
+import { Search, User, LogOut, ChevronDown, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/AuthContext';
 import { useState } from 'react';
@@ -18,14 +18,13 @@ export function Header({ currentView, onViewChange, onSearch }: HeaderProps) {
     return (
         <>
             <header className="flex flex-col md:flex-row items-center justify-between px-8 py-5 border-b border-border bg-white/80 backdrop-blur-md sticky top-0 z-40">
-                <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-600 to-primary-800 text-white flex items-center justify-center font-bold text-lg shadow-lg shadow-primary/20">
-                        MP
+                <div className="flex items-center gap-3 cursor-pointer group">
+                    <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-800 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform">
+                        <Shield className="w-6 h-6 text-white" />
                     </div>
-                    <div className="flex flex-col">
-                        <span className="font-bold text-gray-900 leading-tight text-lg">Parliamentary Connect</span>
-                        <span className="text-[10px] text-primary-600 uppercase tracking-widest font-semibold">Direct Democracy Portal</span>
-                    </div>
+                    <span className="text-xl font-black tracking-tight text-gray-900 group-hover:text-primary-600 transition-colors">
+                        CITIZEN<span className="text-primary-600">POLL</span>
+                    </span>
                 </div>
 
                 <div className="flex bg-gray-100/50 p-1.5 rounded-xl my-4 md:my-0 border border-transparent hover:border-gray-200 transition-colors">

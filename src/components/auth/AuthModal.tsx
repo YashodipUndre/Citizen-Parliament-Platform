@@ -6,11 +6,13 @@ import { cn } from '@/lib/utils';
 interface AuthModalProps {
     isOpen: boolean;
     onClose: () => void;
+    initialMode?: 'login' | 'signup';
 }
 
-export function AuthModal({ isOpen, onClose }: AuthModalProps) {
+export function AuthModal({ isOpen, onClose, initialMode = 'login' }: AuthModalProps) {
     const { login, signup } = useAuth();
-    const [mode, setMode] = useState<'login' | 'signup'>('login');
+    const [mode, setMode] = useState<'login' | 'signup'>(initialMode);
+
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
